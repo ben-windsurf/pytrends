@@ -7,6 +7,8 @@ Unofficial API for Google Trends
 Allows simple interface for automating downloading of reports from Google Trends. 
 Only good until Google changes their backend again :-P. When that happens feel free to contribute!
 
+**Important**: pytrends provides access to **global** Google Trends data aggregated from all users worldwide, not personalized data based on your individual search history. The trends data reflects collective search behavior across Google's user base.
+
 **Looking for maintainers!** Please open an issue with a method of contacting you if you're interested.
 
 

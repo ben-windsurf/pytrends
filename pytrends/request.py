@@ -19,6 +19,10 @@ BASE_TRENDS_URL = 'https://trends.google.com/trends'
 class TrendReq(object):
     """
     Google Trends API
+    
+    This class provides access to global Google Trends data aggregated from all users worldwide.
+    The data returned represents collective search behavior and is not personalized based on
+    individual user search history.
     """
     GET_METHOD = 'get'
     POST_METHOD = 'post'
