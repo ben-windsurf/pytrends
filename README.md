@@ -345,6 +345,7 @@ Returns dictionary
 
 * This is not an official or supported API
 * Google may change aggregation level for items with very large or very small search volume
+* **Search Volume Limitation**: The Google Trends API does not provide absolute search volume data (e.g., "100k searches"). All data returned by pytrends represents relative interest scores on a scale of 0-100, where 100 represents peak popularity for the given time period and search terms. If you need absolute search volume data, consider using third-party APIs like Keywords Everywhere or Google Ads Keyword Planner.
 * Rate Limit is not publicly known, let me know if you have a consistent estimate
   * One user reports that 1,400 sequential requests of a 4 hours timeframe got them to the limit. (Replicated on 2 networks)
   * It has been tested, and 60 seconds of sleep between requests (successful or not) appears to be the correct amount once you reach the limit.
