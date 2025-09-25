@@ -112,14 +112,16 @@ def test_tokens():
                 "trendinessSettings": {"compareTime": "2020-01-02 2020-12-31"},
                 "requestOptions": {"property": "", "backend": "IZG", "category": 0},
                 "language": "en",
-                "userCountryCode": "ES",
+                "userCountryCode": "US",
                 "userConfig": {"userType": "USER_TYPE_SCRAPER"},
             },
-            # We don't care if the help dialog changes.
-            "helpDialog": ANY,
+            "helpDialog": {
+                "content": "Users searching for your term also searched for these queries. You can sort by the following metrics: <p>* <b>Top</b> - The most popular search queries. Scoring is on a relative scale where a value of 100 is the most commonly searched query, 50 is a query searched half as often as the most popular query, and so on. <p>* <b>Rising</b> - Queries with the biggest increase in search frequency since the last time period. Results marked \"Breakout\" had a tremendous increase, probably because these queries are new and had few (if any) prior searches.",
+                "title": "Related queries",
+                "url": "https://support.google.com/trends/answer/4355000",
+            },
             "color": "PALETTE_COLOR_1",
             "keywordName": "pizza",
-            # The token will change in every request.
             "token": ANY,
             "id": "RELATED_QUERIES_0",
             "type": "fe_related_searches",
@@ -145,14 +147,16 @@ def test_tokens():
                 "trendinessSettings": {"compareTime": "2020-01-02 2020-12-31"},
                 "requestOptions": {"property": "", "backend": "IZG", "category": 0},
                 "language": "en",
-                "userCountryCode": "ES",
+                "userCountryCode": "US",
                 "userConfig": {"userType": "USER_TYPE_SCRAPER"},
             },
-            # We don't care if the help dialog changes.
-            "helpDialog": ANY,
+            "helpDialog": {
+                "content": "Users searching for your term also searched for these queries. You can sort by the following metrics: <p>* <b>Top</b> - The most popular search queries. Scoring is on a relative scale where a value of 100 is the most commonly searched query, 50 is a query searched half as often as the most popular query, and so on. <p>* <b>Rising</b> - Queries with the biggest increase in search frequency since the last time period. Results marked \"Breakout\" had a tremendous increase, probably because these queries are new and had few (if any) prior searches.",
+                "title": "Related queries",
+                "url": "https://support.google.com/trends/answer/4355000",
+            },
             "color": "PALETTE_COLOR_2",
             "keywordName": "bagel",
-            # The token will change in every request.
             "token": ANY,
             "id": "RELATED_QUERIES_1",
             "type": "fe_related_searches",
@@ -173,7 +177,7 @@ def test_interest_over_time_ok():
     pytrend.build_payload(kw_list=['pizza', 'bagel'], timeframe='2021-01-01 2021-01-05')
     df_result = pytrend.interest_over_time()
     df_expected = build_interest_over_time_df({
-        'pizza': [100, 83, 78, 49, 50],
+        'pizza': [100, 88, 79, 50, 51],
         'bagel': [2, 2, 2, 1, 1]
     }, dates=['2021-01-01', '2021-01-02', '2021-01-03', '2021-01-04', '2021-01-05'])
     assert_frame_equal(df_result, df_expected)
@@ -189,8 +193,8 @@ def test_interest_over_time_images():
     )
     df_result = pytrend.interest_over_time()
     df_expected = build_interest_over_time_df({
-        'pizza': [85, 100, 93, 93, 93],
-        'bagel': [3, 2, 9, 4, 4]
+        'pizza': [86, 96, 90, 95, 100],
+        'bagel': [3, 2, 4, 4, 4]
     }, dates=['2021-01-01', '2021-01-02', '2021-01-03', '2021-01-04', '2021-01-05'])
     assert_frame_equal(df_result, df_expected)
 
@@ -205,8 +209,8 @@ def test_interest_over_time_news():
     )
     df_result = pytrend.interest_over_time()
     df_expected = build_interest_over_time_df({
-        'pizza': [100, 67, 78, 32, 75],
-        'bagel': [0, 0, 0, 20, 0]
+        'pizza': [89, 92, 100, 49, 61],
+        'bagel': [0, 0, 0, 0, 0]
     }, dates=['2021-01-01', '2021-01-02', '2021-01-03', '2021-01-04', '2021-01-05'])
     assert_frame_equal(df_result, df_expected)
 
@@ -221,8 +225,8 @@ def test_interest_over_time_youtube():
     )
     df_result = pytrend.interest_over_time()
     df_expected = build_interest_over_time_df({
-        'pizza': [88, 100, 100, 92, 95],
-        'bagel': [1, 1, 1, 2, 1]
+        'pizza': [85, 95, 100, 89, 99],
+        'bagel': [1, 2, 1, 1, 1]
     }, dates=['2021-01-01', '2021-01-02', '2021-01-03', '2021-01-04', '2021-01-05'])
     assert_frame_equal(df_result, df_expected)
 
@@ -237,8 +241,8 @@ def test_interest_over_time_froogle():
     )
     df_result = pytrend.interest_over_time()
     df_expected = build_interest_over_time_df({
-        'pizza': [94, 99, 94, 62, 100],
-        'bagel': [0, 0, 0, 0, 8]
+        'pizza': [93, 100, 94, 67, 79],
+        'bagel': [0, 0, 0, 0, 0]
     }, dates=['2021-01-01', '2021-01-02', '2021-01-03', '2021-01-04', '2021-01-05'])
     assert_frame_equal(df_result, df_expected)
 
@@ -261,13 +265,13 @@ def test_multirange_interest_over_time_ok():
         length=6,
         df_head=pd.DataFrame({
             '[0] pizza date': ['Average', 'Jan 1, 2021', 'Jan 2, 2021'],
-            '[0] pizza value': [72, 100, 83],
+            '[0] pizza value': [74, 100, 88],
             '[1] bagel date': ['Average', 'Jan 6, 2021', 'Jan 7, 2021'],
             '[1] bagel value': [1, 1, 1]
         }),
         df_tail=pd.DataFrame({
             '[0] pizza date': ['Jan 3, 2021', 'Jan 4, 2021', 'Jan 5, 2021'],
-            '[0] pizza value': [78, 49, 50],
+            '[0] pizza value': [79, 50, 51],
             '[1] bagel date': ['Jan 8, 2021', 'Jan 9, 2021', 'Jan 10, 2021'],
             '[1] bagel value': [1, 2, 2]
         }, index=pd.Index([3, 4, 5]))
@@ -285,15 +289,15 @@ def test_multirange_interest_over_time_same_keyword_ok():
         length=6,
         df_head=pd.DataFrame({
             '[0] pizza date': ['Average', 'Jan 1, 2021', 'Jan 2, 2021'],
-            '[0] pizza value': [72, 100, 83],
+            '[0] pizza value': [74, 100, 88],
             '[1] pizza date': ['Average', 'Jan 6, 2021', 'Jan 7, 2021'],
-            '[1] pizza value': [68, 52, 52]
+            '[1] pizza value': [68, 53, 52]
         }),
         df_tail=pd.DataFrame({
             '[0] pizza date': ['Jan 3, 2021', 'Jan 4, 2021', 'Jan 5, 2021'],
-            '[0] pizza value': [78, 49, 50],
+            '[0] pizza value': [79, 50, 51],
             '[1] pizza date': ['Jan 8, 2021', 'Jan 9, 2021', 'Jan 10, 2021'],
-            '[1] pizza value': [70, 89, 74]
+            '[1] pizza value': [73, 89, 75]
         }, index=pd.Index([3, 4, 5]))
     )
     expected_result.assert_equals(df_result)
