@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from unittest.mock import ANY
 import re
+import warnings
 
 import pandas as pd
 import numpy as np
@@ -507,6 +508,42 @@ def test_trending_searches_ok():
         )
     )
     expected_result.assert_equals(df_result)
+
+
+def test_trending_searches_timeframe_warning(mocked_responses):
+    """Test that trending_searches warns when called after build_payload with custom timeframe"""
+    mocked_responses.add(
+        url=TrendReq.TRENDING_SEARCHES_URL,
+        method='GET',
+        json={'united_states': ['term 1', 'term 2']}
+    )
+    
+    pytrend = TrendReq()
+    pytrend.build_payload(kw_list=['pizza'], timeframe='2021-01-01 2021-01-31')
+    
+    with pytest.warns(UserWarning, match="The 'trending_searches' method does not support the 'timeframe' parameter"):
+        pytrend.trending_searches(pn='united_states')
+
+
+def test_trending_searches_no_warning_default_timeframe(mocked_responses):
+    """Test that trending_searches does not warn with default timeframe"""
+    mocked_responses.add(
+        url=TrendReq.TRENDING_SEARCHES_URL,
+        method='GET',
+        json={'united_states': ['term 1', 'term 2']}
+    )
+    
+    pytrend = TrendReq()
+    pytrend.build_payload(kw_list=['pizza'])  # Uses default 'today 5-y'
+    
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")  # Turn warnings into errors
+        try:
+            pytrend.trending_searches(pn='united_states')
+        except UserWarning:
+            pytest.fail("trending_searches should not warn with default timeframe")
+
+
 
 
 @pytest.mark.vcr

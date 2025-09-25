@@ -1,5 +1,6 @@
 from itertools import product
 import json
+import warnings
 
 import pandas as pd
 import requests
@@ -477,7 +478,29 @@ class TrendReq(object):
         return result_dict
 
     def trending_searches(self, pn='united_states'):
-        """Request data from Google's Hot Searches section and return a dataframe"""
+        """Request data from Google's Hot Searches section and return a dataframe
+        
+        Note: This method does not support the 'timeframe' parameter from build_payload().
+        Trending searches are always current and cannot be filtered by time period.
+        If you have called build_payload() with a custom timeframe, it will be ignored.
+        """
+        
+        # Check if user has set a custom timeframe and warn them
+        if hasattr(self, 'token_payload') and self.token_payload and 'req' in self.token_payload:
+            try:
+                req_data = json.loads(self.token_payload['req']) if isinstance(self.token_payload['req'], str) else self.token_payload['req']
+                if 'comparisonItem' in req_data and req_data['comparisonItem']:
+                    for item in req_data['comparisonItem']:
+                        if 'time' in item and item['time'] != 'today 5-y':
+                            warnings.warn(
+                                "The 'trending_searches' method does not support the 'timeframe' parameter. "
+                                "Trending searches are always current and the timeframe will be ignored.",
+                                UserWarning,
+                                stacklevel=2
+                            )
+                            break
+            except (json.JSONDecodeError, KeyError, TypeError):
+                pass
 
         # make the request
         # forms become obsolete due to the new TRENDING_SEARCHES_URL
