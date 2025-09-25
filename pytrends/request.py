@@ -411,16 +411,16 @@ class TrendReq(object):
             try:
                 top_list = req_json['default']['rankedList'][0]['rankedKeyword']
                 df_top = pd.json_normalize(top_list, sep='_')
-            except KeyError:
-                # in case no top topics are found, the lines above will throw a KeyError
+            except (KeyError, IndexError):
+                # in case no top topics are found, the lines above will throw a KeyError or IndexError
                 df_top = None
 
             # rising topics
             try:
                 rising_list = req_json['default']['rankedList'][1]['rankedKeyword']
                 df_rising = pd.json_normalize(rising_list, sep='_')
-            except KeyError:
-                # in case no rising topics are found, the lines above will throw a KeyError
+            except (KeyError, IndexError):
+                # in case no rising topics are found, the lines above will throw a KeyError or IndexError
                 df_rising = None
 
             result_dict[kw] = {'rising': df_rising, 'top': df_top}
@@ -460,8 +460,8 @@ class TrendReq(object):
                 top_df = pd.DataFrame(
                     req_json['default']['rankedList'][0]['rankedKeyword'])
                 top_df = top_df[['query', 'value']]
-            except KeyError:
-                # in case no top queries are found, the lines above will throw a KeyError
+            except (KeyError, IndexError):
+                # in case no top queries are found, the lines above will throw a KeyError or IndexError
                 top_df = None
 
             # rising queries
@@ -469,8 +469,8 @@ class TrendReq(object):
                 rising_df = pd.DataFrame(
                     req_json['default']['rankedList'][1]['rankedKeyword'])
                 rising_df = rising_df[['query', 'value']]
-            except KeyError:
-                # in case no rising queries are found, the lines above will throw a KeyError
+            except (KeyError, IndexError):
+                # in case no rising queries are found, the lines above will throw a KeyError or IndexError
                 rising_df = None
 
             result_dict[kw] = {'top': top_df, 'rising': rising_df}
