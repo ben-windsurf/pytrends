@@ -223,7 +223,11 @@ class TrendReq(object):
         return
 
     def interest_over_time(self):
-        """Request data from Google's Interest Over Time section and return a dataframe"""
+        """Request data from Google's Interest Over Time section and return a dataframe
+        
+        Note: This method returns relative interest scores (0-100), not absolute search volumes.
+        The Google Trends API does not provide absolute search volume data.
+        """
 
         over_time_payload = {
             # convert to string as requests will mangle

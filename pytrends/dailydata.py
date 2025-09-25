@@ -56,6 +56,9 @@ def get_daily_data(word: str,
     """Given a word, fetches daily search volume data from Google Trends and
     returns results in a pandas DataFrame.
 
+    Note: This function returns relative interest scores, not absolute search volumes.
+    The Google Trends API does not provide absolute search volume data.
+
     Details: Due to the way Google Trends scales and returns data, special
     care needs to be taken to make the daily data comparable over different
     months. To do that, we download daily data on a month by month basis,
